@@ -1,5 +1,5 @@
 #!/bin/bash
-#Automatically pushes any changes for files generated with a tool.
+#Automatically pushes any changes to the sqlite db, generated from a tool.
 
 usage() { echo "
 Complete list of arguments, all are required:
@@ -11,7 +11,7 @@ Complete list of arguments, all are required:
 
 Tools needed:
  1. sudo apt-get install inotify-tools
- 2. ssh (otherwise git will require password on push) - https://confluence.atlassian.com/bitbucket/getting-started-with-bitbucket/set-up-version-control/set-up-git/set-up-ssh-for-git" 1>&2; exit 1; }
+ 2. ssh (otherwise git will require password on push)" 1>&2; exit 1; }
 
 while getopts ":w:s:d:m:t:" o; do
     case "${o}" in
@@ -38,16 +38,20 @@ while getopts ":w:s:d:m:t:" o; do
 done
 shift $((OPTIND-1))
 
-if [ -z "${w}" ] || [ -z "${s}" ] || [ -z "${d}" ] || [ -z "${m}" ] || [ -z "${t}" ]; then
+if [ -z "${w}" ] || [ -z "${s}" ] || [ -z "${m}" ] || [ -z "${t}" ]; then
     usage
 fi
 
 auto_gen_file=$w
-auto_mod_path=${w%/*} 		
+auto_mod_path=${w%/*}
+base_name="$(basename $auto_gen_file)"
+source_name="$d$base_name"
 source_path=$s
-destination_path="$s$d"
+destination_path="$s/$d"
 commit_message=$m
 delay_for=$t
+
+echo $source_name
 
 echo "Watching file: $auto_gen_file in folder: $auto_mod_path"
 
@@ -63,7 +67,7 @@ do
 		cp $auto_gen_file $destination_path
 		sleep 5
 
-		git add $d
+		git add $source_name
 		git commit -m "$commit_message"
 		git push
 	fi
