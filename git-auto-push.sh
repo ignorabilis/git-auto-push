@@ -63,7 +63,7 @@ do
 		cp $auto_gen_file $destination_path
 		sleep 5
 
-		git add txt
+		git add $d
 		git commit -m "$commit_message"
 		git push
 	fi
