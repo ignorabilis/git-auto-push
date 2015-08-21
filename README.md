@@ -9,5 +9,5 @@ A script for auto pushing files generated from tools
 
 ### Usage ###
 ```bash
--w "/abs/path/to/file-to-watch" -s "/abs/path/to/repo" -d "/relative-path/in/repo" -m "Git commit message + date: `date +%D` `date +%R`" -t 3600
+-w "/abs/path/to/file-to-watch" -s "/abs/path/to/repo" -d "relative-path/in/repo/" -m "Git commit message" -t 3600
 ```
